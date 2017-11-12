@@ -18,6 +18,8 @@ def read_asm_file(file_path):
     return asm_lines
 
 
+
+
 def number_of_lines(file_name):
     """
     This function return the lenght (of rows) of asm file
