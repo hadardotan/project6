@@ -17,9 +17,6 @@ def read_asm_file(file_path):
     asm_file.close()
     return asm_lines
 
-
-
-
 def number_of_lines(file_name):
     """
     This function return the lenght (of rows) of asm file
@@ -33,5 +30,19 @@ def number_of_lines(file_name):
     line_number.close()
     return line_number
 
+def initialze_symble_table():
+    symble_table = {}
+    # "R0":"0","R1":"1","R2":"2","R3":"3","R4":"4","R5":"5","R6":"6",
+    for i in range(16):
+        symble_table["R"+str(i)] = str(i)
+    print(symble_table)
 
+
+def binary_str_to_decimal_int(binary_string):
+    return int(binary_string, 2)
+
+
+
+def decimal_int_to_binary_str(decimal_int):
+    return "{:b}".format(decimal_int)
 
