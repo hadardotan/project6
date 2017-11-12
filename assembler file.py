@@ -26,7 +26,7 @@ def number_of_lines(file_name):
     """
     asm_file = open(file_name)
     line_number = 0
-    while line_number.readline():
+    while asm_file.readline():
         line_number += 1
     line_number.close()
     return line_number
