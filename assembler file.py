@@ -73,6 +73,3 @@ def initialze_symble_table():
     symble_table["THAT"] = decimal_int_to_binary_16_str(4)
     return symble_table
 
-
-def processor():
-
