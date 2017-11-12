@@ -1,7 +1,7 @@
 import math
 import os
+import sys
 
-example_path = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\06\our project\examples folder"
 
 def open_path(path):
     files = {}
@@ -12,12 +12,12 @@ def open_path(path):
                 name = os.path.basename(ob)
                 asm_lines = read_asm_file(path+"\\"+name)
                 files[name] = asm_lines
+        return files, path
     else:
         name = os.path.basename(path)
         asm_lines = read_asm_file(path)
         files[name] = asm_lines
-    return files
-
+    return files , os.path.dirname(path)
 
 def read_asm_file(file_path):
     """
@@ -30,8 +30,6 @@ def read_asm_file(file_path):
     file_length = number_of_lines(file_path)
     for i in range(file_length):
         line = asm_file.readline()
-        if line.endswith("\n"):
-            line = line[:-2]
         asm_lines.append(line)
     asm_file.close()
     return asm_lines
@@ -73,3 +71,60 @@ def initialze_symble_table():
     symble_table["THAT"] = decimal_int_to_binary_16_str(4)
     return symble_table
 
+
+def first_pass(symble_table,asm):
+    no_coments_asm =[]
+    for line in asm:
+        line = line.strip()
+        if not line.startswith("//") and  not (line == "" ):
+            no_coments_asm.append(line)
+    line_counter = 0
+    for line in no_coments_asm:
+        if not line.startswith("("):
+            line_counter += 1
+        else:
+            lable_name = line[1:-2]   # without ( )
+            symble_table[lable_name] = line_counter + 1
+    return symble_table,no_coments_asm
+
+def second_pass(symble_table,asm_lines,hack_file):
+    variable_number = 16
+    for i in range(len(asm_lines)):
+        print(asm_lines[i])
+
+
+
+
+def create_hack_file(hack_path,asm):
+    symble_table = initialze_symble_table()
+    hack_file = open(hack_path,"w+")
+    hack_file.write("hi new hack file")
+    symble_table, asm = first_pass(symble_table,asm)
+    second_pass(symble_table, asm,hack_file)
+    hack_file.close()
+
+
+
+
+def main(path):
+    """
+    Function that calls the 'run' function to run the game 'Asteroids'.
+    :param amnt: An integer defines how many asteroids will be created.
+    """
+    files,folder_path = open_path(path)
+
+    for key in files.keys():
+        name = key[:-4] + ".hack"
+        hack_path = folder_path + "\\" + name
+        create_hack_file(hack_path,files[key])
+
+
+
+example_path = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\06\our project\examples folder\max.asm"
+main(example_path)
+
+""""
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        main(sys.argv[0])
+"""
