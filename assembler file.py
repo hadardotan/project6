@@ -3,12 +3,9 @@
 
 def read_asm_file(file_path):
     """
-    This function returns a list of tuples, representing Articles that are
-    neighbors. The tuple contain two string, which are the articles titles.
-    The second article is neighbor to the first: the first one has link to its
-    pair in the tuple.
-    :param file_name
-    :return: list of tuples
+    This function returns a list of string, each string is a line from asm file.
+    :param file_path
+    :return: asm_lines
     """
     asm_file = open(file_path)
     asm_lines = []
@@ -23,10 +20,9 @@ def read_asm_file(file_path):
 
 def number_of_lines(file_name):
     """
-    This function "helps" the function "read_article_links" by counting the
-    number of lines in the file
+    This function return the lenght (of rows) of asm file
     :param file_name:
-    :return:
+    :return: line_number
     """
     asm_file = open(file_name)
     line_number = 0
@@ -34,10 +30,6 @@ def number_of_lines(file_name):
         line_number += 1
     line_number.close()
     return line_number
-
-
-
-
 
 
 
