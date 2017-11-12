@@ -43,6 +43,11 @@ def binary_str_to_decimal_int(binary_string):
 
 
 
+
+
+
 def decimal_int_to_binary_str(decimal_int):
     return "{:b}".format(decimal_int)
+
+
 
