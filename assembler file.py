@@ -1,4 +1,22 @@
 import math
+import os
+
+example_path = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\06\our project\examples folder"
+
+def open_path(path):
+    files = {}
+    if os.path.isdir(path):
+        dir = os.listdir(path)
+        for ob in dir:
+            if (not os.path.isdir(ob)) and (os.path.basename(ob).endswith(".asm")):
+                name = os.path.basename(ob)
+                asm_lines = read_asm_file(path+"\\"+name)
+                files[name] = asm_lines
+    else:
+        name = os.path.basename(path)
+        asm_lines = read_asm_file(path)
+        files[name] = asm_lines
+    return files
 
 
 def read_asm_file(file_path):
@@ -12,7 +30,8 @@ def read_asm_file(file_path):
     file_length = number_of_lines(file_path)
     for i in range(file_length):
         line = asm_file.readline()
-        #do something with line
+        if line.endswith("\n"):
+            line = line[:-2]
         asm_lines.append(line)
     asm_file.close()
     return asm_lines
@@ -27,7 +46,7 @@ def number_of_lines(file_name):
     line_number = 0
     while asm_file.readline():
         line_number += 1
-    line_number.close()
+    asm_file.close()
     return line_number
 
 def binary_str_to_decimal_int(binary_string):
@@ -40,9 +59,6 @@ def decimal_int_to_binary_16_str(decimal_int):
         return a
     binary = "0"*16 + "{:b}".format(decimal_int)
     return binary[(len(binary) - 16):]
-
-
-
 
 def initialze_symble_table():
     symble_table = {}
@@ -58,6 +74,5 @@ def initialze_symble_table():
     return symble_table
 
 
-s = initialze_symble_table()
-print(s)
+def processor():
 
