@@ -83,15 +83,17 @@ def first_pass(symble_table,asm):
         if not line.startswith("("):
             line_counter += 1
         else:
-            lable_name = line[1:-2]   # without ( )
-            symble_table[lable_name] = line_counter + 1
+            lable_name = line[1:-1]   # without ( )
+            symble_table[lable_name] = decimal_int_to_binary_16_str(line_counter + 1)
+
+    print(symble_table)
+    for i in range(len(no_coments_asm)):
+        print(no_coments_asm[i])
     return symble_table,no_coments_asm
+
 
 def second_pass(symble_table,asm_lines,hack_file):
     variable_number = 16
-    for i in range(len(asm_lines)):
-        print(asm_lines[i])
-
 
 
 
@@ -99,8 +101,13 @@ def create_hack_file(hack_path,asm):
     symble_table = initialze_symble_table()
     hack_file = open(hack_path,"w+")
     hack_file.write("hi new hack file")
-    symble_table, asm = first_pass(symble_table,asm)
+
+
+
+
+    symble_table, asm = first_pass(symble_table, asm)
     second_pass(symble_table, asm,hack_file)
+
     hack_file.close()
 
 
@@ -123,8 +130,4 @@ def main(path):
 example_path = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\06\our project\examples folder\max.asm"
 main(example_path)
 
-""""
-if __name__ == "__main__":
-    if len(sys.argv) == 1:
-        main(sys.argv[0])
-"""
+
