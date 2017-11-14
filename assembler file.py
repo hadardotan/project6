@@ -273,9 +273,7 @@ def second_pass(symble_table, asm_lines, hack_file):
 
         else:
             hack_file.write(do_c_instruction(line))
-
-
-
+            
 
 
 
