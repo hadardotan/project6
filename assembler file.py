@@ -34,6 +34,11 @@ class Dest(Enum):
 
 
 def open_path(path):
+    """
+
+    :param path:
+    :return:
+    """
     files = {}
     if os.path.isdir(path):
         dir = os.listdir(path)
