@@ -1,6 +1,36 @@
 import math
 import os
+import string
 import sys
+from enum import Enum
+
+class Jump(Enum):
+    """
+    enum for translation of symbolic jump c-instruction into binary number
+    """
+    null="000"
+    JGT="001"
+    JEQ="010"
+    JGE="011"
+    JLT="100"
+    JNE="101"
+    JLE="110"
+    JMP="111"
+
+
+class Dest(Enum):
+    """
+    enum for translation of symbolic dest c-instruction into binary number
+    """
+    null="000"
+    M="001"
+    D="010"
+    MD="011"
+    A="100"
+    AM="101"
+    AD="110"
+    AMD="111"
+
 
 
 def open_path(path):
@@ -90,6 +120,79 @@ def first_pass(symble_table,asm):
     for i in range(len(no_coments_asm)):
         print(no_coments_asm[i])
     return symble_table,no_coments_asm
+
+
+def initialze_comp_table():
+    """
+    creates dictonary  for translation of symbolic comp c-instruction into
+     binary number. each comp instruction string has a tuple value in the
+     dictonary for his a bit value and his 6 c-bits
+     for example:
+     "!M" = ("0","110001")
+     means a="0" , (c1...c6)="110001"
+    :return:
+    """
+    comp_table = {}
+
+    comp_table["0"] = ("0","101010")
+    comp_table["1"] = ("0", "111111")
+    comp_table["-1"] = ("0", "111010")
+    comp_table["D"] = ("0", "001100")
+    comp_table["A"] = ("0", "110000")
+    comp_table["M"] = ("1", "110000")
+    comp_table["!D"] = ("0", "001101")
+    comp_table["!A"] = ("0", "110001")
+    comp_table["!M"] = ("1", "110001")
+    comp_table["-D"] = ("1", "001111")
+    comp_table["-A"] = ("0", "110011")
+    comp_table["-M"] = ("1", "110011")
+    comp_table["D+1"] = ("0", "011111")
+    comp_table["A+1"] = ("0", "110111")
+    comp_table["M+1"] = ("1", "110111")
+    comp_table["D-1"] = ("0", "001110")
+    comp_table["A-1"] = ("0", "110010")
+    comp_table["M-1"] = ("1", "110010")
+    comp_table["D+A"] = ("0", "000010")
+    comp_table["D+M"] = ("1", "000010")
+    comp_table["D-A"] = ("0", "010011")
+    comp_table["D-M"] = ("1", "010011")
+    comp_table["A-D"] = ("0", "000111")
+    comp_table["M-D"] = ("1", "000111")
+    comp_table["D&A"] = ("0", "000000")
+    comp_table["D&M"] = ("1", "000000")
+    comp_table["D|A"] = ("0", "010101")
+    comp_table["D|M"] = ("1", "010101")
+
+
+
+def do_c_instruction(line):
+    """
+    this function breaks a c-instruction line into its underlying fields:
+    dest, comp and jump
+    for each field the function generates corresponding binary code,
+
+    then it assemble the translated binary code into 16-bit machine instruction
+    :param line: string to translate
+    :return: line translated to binary code
+    """
+    dest_end_index = line.find("=")
+    current_dest = line[0:4];
+    jump_start_index = line.find(";")
+
+    if jump_start_index!=0:
+        comp=line[(dest_end_index+1):(jump_start_index)]
+        jump=line[jump_start_index+1::]
+    else:
+        comp=line[(dest_end_index+1)::]
+        jump=Jump.null
+
+
+
+
+
+
+
+
 
 
 def second_pass(symble_table,asm_lines,hack_file):
