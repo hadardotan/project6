@@ -269,10 +269,10 @@ def second_pass(symble_table, asm_lines, hack_file):
                                                             variable_counter)
                 variable_counter+=1
  ## TODO: check with mika
-            hack_file[line] = symble_table[line]
+            hack_file.write(symble_table[line])
 
         else:
-            hack_file[line] = do_c_instruction(line)
+            hack_file.write(do_c_instruction(line))
 
 
 
