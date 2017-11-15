@@ -232,16 +232,18 @@ def second_pass(symble_table, asm_lines, hack_file):
     :param hack_file:
     :return:
     """
-    variable_counter =VARIABLE_COUNTER_START
+    variable_counter = VARIABLE_COUNTER_START
     for line in asm_lines:
         if line.startswith("@"): # a-instruction
-            print(line)
             line = line[1::]
-            print(line)
-            if symble_table[line] == -1: #create new variable
+            if line.isdigit() or line[0] == "-":
+                hack_file.write(decimal_int_to_binary_16_str(int(line)) + '\n')
+            elif not line in symble_table.keys():
                 symble_table = add_variable_to_symble_table(symble_table,line,variable_counter)
                 variable_counter += 1
-            hack_file.write(symble_table[line]+ '\n')
+                hack_file.write(symble_table[line] + '\n')
+            else:
+                hack_file.write(symble_table[line]+ '\n')
         else:
             hack_file.write(do_c_instruction(line)+ '\n')
 
