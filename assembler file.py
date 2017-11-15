@@ -8,10 +8,8 @@ C_INSTRUCTION_BINARY_START = "111"
 VARIABLE_COUNTER_START = 16
 NULL = "null"
 
-
 def open_path(path):
     """
-
     :param path:
     :return:
     """
@@ -31,7 +29,6 @@ def open_path(path):
         files[name] = asm_lines
     return files, os.path.dirname(path)
 
-
 def read_asm_file(file_path):
     """
     This function returns a list of string, each string is a line from asm file.
@@ -47,7 +44,6 @@ def read_asm_file(file_path):
     asm_file.close()
     return asm_lines
 
-
 def number_of_lines(file_name):
     """
     This function return the lenght (of rows) of asm file
@@ -61,10 +57,8 @@ def number_of_lines(file_name):
     asm_file.close()
     return line_number
 
-
 def binary_str_to_decimal_int(binary_string):
     return int(binary_string, 2)
-
 
 def decimal_int_to_binary_16_str(decimal_int):
     if decimal_int < 0:  # 2's complement
@@ -73,7 +67,6 @@ def decimal_int_to_binary_16_str(decimal_int):
         return a
     binary = "0" * 16 + "{:b}".format(decimal_int)
     return binary[(len(binary) - 16):]
-
 
 def initialze_symble_table():
     symble_table = {}
@@ -88,27 +81,28 @@ def initialze_symble_table():
     symble_table["THAT"] = decimal_int_to_binary_16_str(4)
     return symble_table
 
-
 def first_pass(symble_table, asm):
-    no_coments_asm = []
+    new_asm = []
     for line in asm:
         line = line.strip()
         if not line.startswith("//") and not (line == ""):
-            no_coments_asm.append(line)
+            new_asm.append(line)
     line_counter = 0
-    for line in no_coments_asm:
+    for line in new_asm:
         if not line.startswith("("):
             line_counter += 1
         else:
             lable_name = line[1:-1]  # without ( )
             symble_table[lable_name] = decimal_int_to_binary_16_str(
                 line_counter + 1)
-
-    print(symble_table)
-    for i in range(len(no_coments_asm)):
-        print(no_coments_asm[i])
+    no_coments_asm = []
+    for line in new_asm:
+        if not line.startswith("("):
+            line = line.split("//")[0]
+            no_coments_asm.append(line)
+    # for i in range(len(no_coments_asm)):
+    #     print(no_coments_asm[i])
     return symble_table, no_coments_asm
-
 
 def initialze_dest_table():
     """
@@ -129,7 +123,6 @@ def initialze_dest_table():
 
     return dest_table
 
-
 def initialze_jump_table():
     """
     creates dictonary  for translation of symbolic jump c-instruction into
@@ -149,7 +142,6 @@ def initialze_jump_table():
 
     return jump_table
 
-
 def initialze_comp_table():
     """
     creates dictonary  for translation of symbolic comp c-instruction into
@@ -161,7 +153,6 @@ def initialze_comp_table():
     :return:
     """
     comp_table = {}
-
     comp_table["0"] = "0101010"
     comp_table["1"] = "0111111"
     comp_table["-1"] = "0111010"
@@ -190,9 +181,7 @@ def initialze_comp_table():
     comp_table["D&M"] = "1000000"
     comp_table["D|A"] = "0010101"
     comp_table["D|M"] = "1010101"
-
     return comp_table
-
 
 def do_c_instruction(line):
     """
@@ -204,17 +193,14 @@ def do_c_instruction(line):
     :param line: string to translate
     :return: line translated to binary code
     """
-
     comp_table = initialze_comp_table()
     jump_table = initialze_jump_table()
     dest_table = initialze_dest_table()
-
     dest_end_index = line.find("=")
     if dest_end_index != -1:
         dest = line[0:dest_end_index]
     else:
         dest = NULL
-
     jump_start_index = line.find(";")
     if jump_start_index != -1:
         comp = line[(dest_end_index+1):(jump_start_index)]
@@ -222,19 +208,11 @@ def do_c_instruction(line):
     else:
         comp = line[(dest_end_index + 1)::]
         jump = NULL
-
     dest = dest_table[dest]
     comp = comp_table[comp]
     jump = jump_table[jump]
     binary_value = C_INSTRUCTION_BINARY_START + comp + dest + jump
-
     return binary_value
-
-
-print(do_c_instruction("0;JMP"))
-
-
-
 
 def add_variable_to_symble_table(symble_table, variable, index):
     """
@@ -248,12 +226,8 @@ def add_variable_to_symble_table(symble_table, variable, index):
     symble_table[variable] = decimal_int_to_binary_16_str(index)
     return symble_table
 
-
-
-
 def second_pass(symble_table, asm_lines, hack_file):
     """
-
     :param symble_table:
     :param asm_lines:
     :param hack_file:
@@ -273,21 +247,13 @@ def second_pass(symble_table, asm_lines, hack_file):
 
         else:
             hack_file.write(do_c_instruction(line))
-            
-
-
-
 
 def create_hack_file(hack_path, asm):
     symble_table = initialze_symble_table()
     hack_file = open(hack_path, "w+")
-    hack_file.write("hi new hack file")
-
     symble_table, asm = first_pass(symble_table, asm)
     second_pass(symble_table, asm, hack_file)
-
     hack_file.close()
-
 
 def main(path):
     """
@@ -295,12 +261,10 @@ def main(path):
     :param amnt: An integer defines how many asteroids will be created.
     """
     files, folder_path = open_path(path)
-
     for key in files.keys():
         name = key[:-4] + ".hack"
         hack_path = folder_path + "\\" + name
         create_hack_file(hack_path, files[key])
-
 
 example_path = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\06\our project\examples folder\max.asm"
 main(example_path)
