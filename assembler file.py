@@ -93,8 +93,7 @@ def first_pass(symble_table, asm):
             line_counter += 1
         else:
             lable_name = line[1:-1]  # without ( )
-            symble_table[lable_name] = decimal_int_to_binary_16_str(
-                line_counter + 1)
+            symble_table[lable_name] = decimal_int_to_binary_16_str(line_counter)    ####### +1
     no_coments_asm = []
     for line in new_asm:
         if not line.startswith("("):
@@ -208,9 +207,9 @@ def do_c_instruction(line):
     else:
         comp = line[(dest_end_index + 1)::]
         jump = NULL
-    dest = dest_table[dest]
-    comp = comp_table[comp]
-    jump = jump_table[jump]
+    dest = dest_table[dest.strip()]
+    comp = comp_table[comp.strip()]
+    jump = jump_table[jump.strip()]
     binary_value = C_INSTRUCTION_BINARY_START + comp + dest + jump
     return binary_value
 
@@ -236,17 +235,15 @@ def second_pass(symble_table, asm_lines, hack_file):
     variable_counter =VARIABLE_COUNTER_START
     for line in asm_lines:
         if line.startswith("@"): # a-instruction
+            print(line)
             line = line[1::]
+            print(line)
             if symble_table[line] == -1: #create new variable
-                symble_table = add_variable_to_symble_table(symble_table,
-                                                            line,
-                                                            variable_counter)
-                variable_counter+=1
- ## TODO: check with mika
-            hack_file.write(symble_table[line])
-
+                symble_table = add_variable_to_symble_table(symble_table,line,variable_counter)
+                variable_counter += 1
+            hack_file.write(symble_table[line]+ '\n')
         else:
-            hack_file.write(do_c_instruction(line))
+            hack_file.write(do_c_instruction(line)+ '\n')
 
 def create_hack_file(hack_path, asm):
     symble_table = initialze_symble_table()
@@ -266,5 +263,5 @@ def main(path):
         hack_path = folder_path + "\\" + name
         create_hack_file(hack_path, files[key])
 
-example_path = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\06\our project\examples folder\max.asm"
+example_path = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\06\our project\examples folder"
 main(example_path)
