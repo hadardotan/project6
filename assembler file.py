@@ -180,6 +180,12 @@ def initialze_comp_table():
     comp_table["D&M"] = "1000000"
     comp_table["D|A"] = "0010101"
     comp_table["D|M"] = "1010101"
+    comp_table["D<<"] = "0110000"
+    comp_table["D>>"] = "0010000"
+    comp_table["A<<"] = "0100000"
+    comp_table["A>>"] = "0000000"
+    comp_table["M<<"] = "1100000"
+    comp_table["M>>"] = "1000000"
     return comp_table
 
 def do_c_instruction(line):
@@ -239,7 +245,8 @@ def second_pass(symble_table, asm_lines, hack_file):
             if line.isdigit() or line[0] == "-":
                 hack_file.write(decimal_int_to_binary_16_str(int(line)) + '\n')
             elif not line in symble_table.keys():
-                symble_table = add_variable_to_symble_table(symble_table,line,variable_counter)
+                symble_table = add_variable_to_symble_table(symble_table,line,
+                                                            variable_counter)
                 variable_counter += 1
                 hack_file.write(symble_table[line] + '\n')
             else:
