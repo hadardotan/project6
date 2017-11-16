@@ -1,8 +1,6 @@
 import math
 import os
-import string
-import sys
-from enum import Enum
+
 
 C_INSTRUCTION_BINARY_START = "111"
 VARIABLE_COUNTER_START = 16
