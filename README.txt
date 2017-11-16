@@ -19,7 +19,7 @@ The output file is stored in the same directory of the input file.
 Submitted files :
 -----------------
 README
-assembler file.py
+HackAssembler.py
 
 
 
